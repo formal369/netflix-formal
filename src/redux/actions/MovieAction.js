@@ -11,17 +11,26 @@ function getMovies() {
       const topRatedApi = api.get(`/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`)
   
       const upComingApi = api.get(`/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`)
+
+      const genreApi = api.get(`/genre/movie/list?api_key=${API_KEY}&language=en-US`)
       
       //3개의 API호출 동시에 진행시키기
-      let [popularMovies, topRatedMovies, upComingMovies] = await Promise.all([
+      let [popularMovies, topRatedMovies, upComingMovies, genreList] = await Promise.all([
         popularMovieApi, 
         topRatedApi, 
-        upComingApi
+        upComingApi,
+        genreApi,
       ]);
+
   
       dispatch({
         type: "GET_MOVIES_SUCCESS",
-        payload: { popularMovies: popularMovies.data, topRatedMovies: topRatedMovies.data, upComingMovies: upComingMovies.data },
+        payload: { 
+          popularMovies: popularMovies.data, 
+          topRatedMovies: topRatedMovies.data, 
+          upComingMovies: upComingMovies.data,
+          genreList: genreList.data.genres,
+        },
       });
     } catch (error) {
       // 에러핸들링
